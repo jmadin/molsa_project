@@ -2,12 +2,13 @@
 title: "Analysis"
 author: "Me"
 date: "5/1/2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
+source("R/function.R")
 ```
 
 # Our new analysis
@@ -26,8 +27,21 @@ plot(Weight ~ Height, data)
 data <- data %>%
   mutate(Height_log10 = log10(Height), Weight_log10 = log10(Weight))
 
-plot(Weight_log10 ~ Height_log10, data)
+#pdf("output/figure1.pdf")
 
+  plot(Weight_log10 ~ Height_log10, data)
+  
+  mod <- lm(Weight_log10 ~ Height_log10, data)
+  x <- sort(data$Height_log10)
+  pred <- predict(mod, list(Height_log10=x), interval="prediction")
+  
+  lines(x, pred[,1])
+  
+  polygon(c(x, rev(x)), c(pred[,2], rev(pred[,3])), col=rgb(0,0,0,0.1), border=NA)
+
+#dev.off()
+
+write.csv(summary(mod)$coef, "output/table1.csv")
 
 ```
 
