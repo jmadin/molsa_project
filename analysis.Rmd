@@ -7,7 +7,31 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
+
+# Our new analysis
+
+```{r analysis}
+
+data <- read_csv("https://raw.githubusercontent.com/jmadin/himbr/master/data/seed_root_herbivores.csv")
+
+data %>%
+  select(Height, Weight)
+
+data[c("Height", "Weight")]
+
+plot(Weight ~ Height, data)
+
+data <- data %>%
+  mutate(Height_log10 = log10(Height), Weight_log10 = log10(Weight))
+
+plot(Weight_log10 ~ Height_log10, data)
+
+
+```
+
+
 
 ## R Markdown
 
